@@ -317,11 +317,14 @@ active_device_list:
 ``` ["esp-uploaded-example"] ```
 
 
+Scheduler
+---------
 
+Scheduler.js takes device names and endpoints and adds schedule specific information. It does not interract with any of the other device objects or arrays.
 
-// scheduler.js takes device names and endpoints and adds schedule specific information
-// it does not interract with active devices, active device list, or active init list
-schedule data:
+schedule_data:
+
+```
 {
 	"esp-bedside-lamp":{
 		"alarmLight":{
@@ -351,6 +354,7 @@ schedule data:
 		}
 	}
 }
+```
 
 // behavior of a custom sketch on an esp chip
 	
