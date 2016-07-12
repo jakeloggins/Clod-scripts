@@ -1,5 +1,3 @@
-# clod-scripts
-
 Data Structure
 ==============
 
@@ -8,7 +6,7 @@ Initial Config
 
 Initial config will produce this object and pass it to persistence, which stores it in the active_init_list
 
-active init list example:
+active_init_list example:
 ```
 {
   "16019999": {
@@ -310,11 +308,11 @@ all_devices object:
 
 Persistence keeps a running list of all_devices who have a device_status of "connected" ...
 
-active_device_list
+active_device_list:
 ```["crouton-demo-new", "esp-uploaded-example"] ```
 
 ... and a list of devices that are "connected" and have "type:esp" (this is only for use by the uploader).
-```["esp-uploaded-example"]```
+``` ["esp-uploaded-example"] ```
 
 
 // scheduler.js takes device names and endpoints and adds schedule specific information
