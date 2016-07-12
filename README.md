@@ -1,5 +1,8 @@
-Data Structure
+Clod Walkthrough
 ==============
+
+This section explains the behavior of the Clod scripts as an esp chip is added to the system and a user performs typical interactions with it. **If you just want to use Clod, you don't need to read this section.** This is intended for developers who want to improve the codebase, contribute to the sketch library, create their own GUI, or integrate Clod with 3rd party services.
+
 
 Initial Config
 --------------
@@ -28,10 +31,14 @@ Uploader
 ---------
 
 * Uploader.js takes the above object from initial config and builds the following JSON with provided user input.
+
   * Note: Although this is currently done with Crouton, like everything else with Clod, it will work the same way with anything that can produce and send an object over MQTT.
-* Adds following user input: upload sketch, name, path, endpoint names and values if card_display_choice is custom
-* If card_display_choice is "default", it will grab "default_endpoints.json" file from the sketch folder and insert it
-* Modifies the init_device_name def file in the sketch folder so that the esp knows its name on startup
+
+* Adds following user input: upload sketch, name, path, endpoint names and values if card_display_choice is custom.
+
+* If card_display_choice is "default", it will grab "default_endpoints.json" file from the sketch folder and insert it.
+
+* Modifies the init_device_name def file in the sketch folder so that the esp knows its name on startup.
 
 
 ```
