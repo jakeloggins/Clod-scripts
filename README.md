@@ -27,7 +27,8 @@ active_init_list example:
 Uploader
 ---------
 
-* Uploader.js must take the above object from initial config and build the following JSON with provided user input.
+* Uploader.js takes the above object from initial config and builds the following JSON with provided user input.
+  * Note: Although this is currently done with Crouton, like everything else with Clod, it will work the same way with anything that can produce and send an object over MQTT.
 * Adds following user input: upload sketch, name, path, endpoint names and values if card_display_choice is custom
 * If card_display_choice is "default", it will grab "default_endpoints.json" file from the sketch folder and insert it
 * Modifies the init_device_name def file in the sketch folder so that the esp knows its name on startup
@@ -355,44 +356,3 @@ schedule_data:
 	}
 }
 ```
-
-// behavior of a custom sketch on an esp chip
-	
-	// ask persistence/control/device_name/chipID "request states" --  do you have any states with my device_name or chipID
-	
-	    // if not, receive reply from deviceInfo/control/device_name "no states" 
-
-	      // send deviceInfo/confirm/device_name {default object} -- send the device info object with default endpoints included
-	        // NOTE: This step probably isn't necessary. persistence should always have 
-
-	    // if yes, receive each endpoint from [device path]/control/[device_name]/[endpoint_key] (camelized card title) 
-
-	      // receive each endpoint one by one and it's corresponding value
-
-	        // send endpoint_key to function stored in namepins.h at compile time
-	        
-	        // function returns static_endpoint_id associated with that endpoint
-	    
-	        // sketch acts on that value as it normally would, using the static_endpoint_id to know for sure what it should do (turn output pin on/off, adjust RGB light, etc)
-	        
-	        // sketch confirms the value by sending it back on /[path]/[confirm]/[device_name]/[endpoint_key]
-
-
-
-
-
-Persistence
------------
-
-
-
-Uploader
----------
-
-
-
-Scheduler
---------
-
-
-
