@@ -5,7 +5,7 @@ This section explains the behavior of the Clod scripts as an esp chip is added t
 
 
 Initial Config
---------------
+-------------- 
 
 To start, the Initial_Config sketch should be flashed to an esp chip. The script broadcasts as the "Clod" wifi network. When a user connects, they are prompted to enter the user/pass of their home wifi network.
 
