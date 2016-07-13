@@ -122,21 +122,33 @@ If the upload is not successful, the script will:
 Persistence
 -----------
 
-The persistence script is the workhorse of the Clod system. It listens to MQTT traffic in order to update device information files, handle requests from devices, and help Crouton function properly. 
+The persistence script is the workhorse of the Clod system. It listens to MQTT traffic in order to update device information files, handles requests from devices, and helps Crouton function properly. 
 
 
 * Manage requests from newly-added esp chips
 
 * Manage new additions of devices to the Crouton dashboard
 
-* Listen for Last Will and Testament ("LWT") messages to update connection status of device.
+* Listen for Last Will and Testament ("LWT") messages to update the connection status of device.
 
-* List to confirm messages to update endpoint states
+* List to confirm messages to update endpoint states.
 
 * Maintain all_devices.json, active_device_list.json, active_init_list.json, and active_device_list_esp.json
 
 
-Example all_devices object:
+### ESP chip after upload
+
+1. Persistence adds a newly uploaded device to all_devices as seen in the `esp-uploaded-example` device object below and to the active device lists. 
+
+2. In the Crouton connections tab, the active devices will show up in the "Select Available Device" dropdown menu. 
+
+3. Crouton will add the device by sending ` /deviceInfo/control/[name] "get" `. 
+
+4. Persistence will respond by sending the device object, an example of which can be seen below in `esp-uploaded-example`, to ` /deviceInfo/confirm/[name] `. 
+
+5. Crouton uses the device object to fill out the dashboard display cards.
+
+Here's what all_devices.json looks like with two device objects:
 
 ```
 {
@@ -227,8 +239,6 @@ Example all_devices object:
 }
 
 ```
-
-### ESP chip after 
 
 
 ### List of Currently Connected Devices
