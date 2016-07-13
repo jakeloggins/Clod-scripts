@@ -246,43 +246,83 @@ Here's what all_devices.json looks like with two device objects:
 Persistence keeps a running list of all_devices who have a device_status of "connected" ...
 
 active_device_list:
-
 ``` ["crouton-demo-new", "esp-uploaded-example"] ```
 
 ... and a list of devices that are "connected" and have "type:esp" (this is only for use by the uploader).
 
 active_device_list_esp:
-
 ``` ["esp-uploaded-example"] ```
+
+
+#### Remembering States
+
+Within Clod, when a user sends a device a command, a MQTT message is sent to the ` /[path]/control/[name]/[endpoint] ` topic. All devices receive the command, do whatever they are programmed to do, and then return the message to the `/[path]/confirm/[name]/[endpoint] ` topic. Persistence listens and stores all messages that come in on the confirm topics. Persistence is always available to reply to devices requesting their last known states, whether during the startup process or for any other reason. Persistence will reply by sending a message to every endpoint's control topic. 
+
+* As an example, imagine a device programmed with a single endpoint that toggled a switch. By default, the switch is `off`. The user toggles the switch `on`, causing a message to be sent: ` /[path]/control/[name]/[endpoint] "on" `
+
+* The device loses power, so it will startup with the default state of `off`. But that's not what the user intends.
+
+* Instead, the device asks persistence for the last state: ``` /persistence/control/[name] "request states" ```. 
+
+* Persistence replies with exactly the same message that a user would trigger: ` /[path]/control/[name]/[endpoint] "on" `
+
+* The device doesn't know or care that the message came from persistence, it just responds as it normally would to any message on the control channel by doing whatever it was programmed to do.
+
+* If the user wasn't around when the device was interrupted, it will have no idea that this persistence bit happened. The switch is just `on` as intended.
+
 
 #### ESP Startup Process
 
 1. On startup, esp devices ask persistence for its states by publishing to ``` /persistence/control/[name] "request states" ```. 
 
-2. Persistence checks active_devices for the name key, and if found, returns the stored object to the device.
+2. Persistence checks active_devices for the name key.
   
-  * If found, it returs
+  * If found, it returns the endpoint states in a series of ` /[path]/control/[name]/[endpoint] ` messages. One for each endpoint within the device.
 
-3. Esp verifies that its current IP address is consistent with the one in the object it just recieved.
+  * If not found, it sends `/deviceInfo/control/[name] "no states" `. If this happens, something went wrong during the upload process.
 
-4. Esp sets endpoints accordingly and starts to function according to the sketch.
+4. The device sets endpoints accordingly and starts to function according to the sketch.
 
 5. If the esp disconnects from the MQTT broker or loses power, this process will repeat.
 
 
+#### Non-ESP Startup Process
+
+1. On startup, devices ask persistence for its states by publishing to ``` /persistence/control/[name] "request states" ```. 
+
+2. Persistence checks active_devices for the name key.
+  
+  * If found, it sends the entire device object to `/deviceInfo/control/[name] `
+
+  * If not found, it sends `/deviceInfo/control/[name] "no states" `. The device then sends its internally stored device object to ` /deviceInfo/confirm/[name] `. See example clients for more details.
+
+4. The device sets endpoints accordingly and starts to function as programmed.
+
+5. If the device disconnects from the MQTT broker or loses power, this process will repeat.
+
+
 #### IP Verification
 
+The uploader script needs to know the device's IP address to function properly. Therefore, every time a device restarts or re-connects to the MQTT broker, it should verify the IP address stored in all_devices is accurate.
+
+* Device sends persistence its IP: ` /persistence/control/[name]/ip "192.168.1.99" `
+
+* Persistence checks to see if it matches.
+
+  * Return ` /persistence/confirm/[name]/ip "no change" ` if IP matched.
+
+  * Return ` /persistence/confirm/[name]/ip "192.168.1.99" ` if IP did not match.
 
 
 #### LWT messages
 
-Devices should be programmed to send an LWT message to ` /[location path]/errors/[name] `. Persistence will mark it as disconnected and, should
+Devices should be programmed to send an LWT message to ` /[location path]/errors/[name] `. Persistence will mark the device as disconnected within all_devices and remove it from the active lists. Depending on the circumstances, persistence may also remove the device entirely from all_devices.
 
 
 Scheduler
 ---------
 
-Scheduler.js takes device names and endpoints and adds schedule specific information. It does not interract with any of the other device objects or arrays.
+Scheduler.js takes device names and endpoints and adds schedule specific information. It does not interract with all_devices or the active lists.
 
 schedule_data:
 
