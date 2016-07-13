@@ -118,17 +118,67 @@ If the upload is not successful, the script will:
 * send a failed message: ` /uploader/confirm/[name] "failed" ` 
 
 
+
 Persistence
 -----------
 
-Persistence.js keeps track of all devices and states for persistence, uploading, deviceInfo, error messages, and helping arduino based devices
+The persistence script is the workhorse of the Clod system. It listens to MQTT traffic in order to update device information files, handle requests from devices, and help Crouton function properly. 
 
-* adds the device name as the key for each object in the list
 
-example all_devices object:
+* Manage requests from newly-added esp chips
+
+* Manage new additions of devices to the Crouton dashboard
+
+* Listen for Last Will and Testament ("LWT") messages to update connection status of device.
+
+* List to confirm messages to update endpoint states
+
+* Maintain all_devices.json, active_device_list.json, active_init_list.json, and active_device_list_esp.json
+
+
+Example all_devices object:
 
 ```
 {
+	"esp-uploaded-example": {
+		"deviceInfo":{
+			"current_ip": "192.168.1.141",
+			"type": "esp",
+			"espInfo": {
+				"chipID": "16013813",
+				"board_type": "esp01_1m",
+				"platform": "espressif",
+				"flash_size": 1048576,
+				"real_size": 1048576,
+				"boot_version": 4,
+				"upload_sketch": "basic_esp8266",
+    		},
+			"device_status": "good",
+			"device_name": "esp-uploaded-example",
+			"description": "testing new uploader",
+			"color":"#4D90FE",
+			"path":"/house/upstairs/spare-room/test",
+			"card_display_choice": "custom",
+			"endPoints":{
+				"lastTimeTriggered": {
+					"title": "Last Time Triggered",
+					"card-type": "crouton-simple-input",
+					"static_endpoint_id": "time_input",
+					"values":{
+						"value": "n/a"
+					}
+				},
+				"alertEmail": {
+					"title": "Alert Email",
+					"card-type": "crouton-simple-input",
+					"static_endpoint_id": "email_input",
+					"values": {
+						"value": "blah.blah@gmail.com"
+					}
+				}
+			}
+		}
+	},
 	"crouton-demo-new":{
 		"deviceInfo":{
 			"current_ip": "192.168.1.135",
@@ -173,60 +223,12 @@ example all_devices object:
 				}
 			}
 		}
-	},
-	"esp-uploaded-example": {
-		"deviceInfo":{
-			"current_ip": "192.168.1.141",
-			"type": "esp",
-			"espInfo": {
-				"chipID": "16013813",
-				"board_type": "esp01_1m",
-				"platform": "espressif",
-				"flash_size": 1048576,
-				"real_size": 1048576,
-				"boot_version": 4,
-				"upload_sketch": "basic_esp8266",
-    		},
-			"device_status": "good",
-			"device_name": "esp-uploaded-example",
-			"description": "testing new uploader",
-			"color":"#4D90FE",
-			"path":"/house/upstairs/spare-room/test",
-			"card_display_choice": "custom",
-			"endPoints":{
-				"lastTimeTriggered": {
-					"title": "Last Time Triggered",
-					"card-type": "crouton-simple-input",
-					"static_endpoint_id": "time_input",
-					"values":{
-						"value": "n/a"
-					}
-				},
-				"alertEmail": {
-					"title": "Alert Email",
-					"card-type": "crouton-simple-input",
-					"static_endpoint_id": "email_input",
-					"values": {
-						"value": "blah.blah@gmail.com"
-					}
-				}
-			}
-		}
 	}
 }
 
 ```
-### ESP Startup Process
 
-1. On startup, esp devices ask persistence for its states by publishing to ``` /deviceInfo/control/[name] "get states" ```. 
-
-2. Persistence checks active_devices for the name key, and if found, returns the stored object to the device.
-
-3. Esp verifies that its current IP address is consistent with the one in the object it just recieved.
-
-4. Esp sets endpoints accordingly and starts to function according to the sketch.
-
-5. If the esp disconnects from the MQTT broker or loses power, this process will repeat.
+### ESP chip after 
 
 
 ### List of Currently Connected Devices
@@ -240,6 +242,20 @@ active_device_list:
 ... and a list of devices that are "connected" and have "type:esp" (this is only for use by the uploader).
 
 ``` ["esp-uploaded-example"] ```
+
+### ESP Startup Process
+
+1. On startup, esp devices ask persistence for its states by publishing to ``` /deviceInfo/control/[name] "get states" ```. 
+
+2. Persistence checks active_devices for the name key, and if found, returns the stored object to the device.
+
+3. Esp verifies that its current IP address is consistent with the one in the object it just recieved.
+
+4. Esp sets endpoints accordingly and starts to function according to the sketch.
+
+5. If the esp disconnects from the MQTT broker or loses power, this process will repeat.
+
+
 
 
 Scheduler
