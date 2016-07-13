@@ -4,16 +4,18 @@ Clod Walkthrough
 This section explains the behavior of the Clod scripts as an esp chip is added to the system and a user performs typical interactions with it. **If you just want to use Clod, you don't need to read this section.** This is intended for developers who want to improve the codebase, contribute to the sketch library, create their own GUI, or integrate Clod with 3rd party services.
 
 
-Initial Config
+Init_Config
 -------------- 
 
-To start, the Initial_Config sketch should be flashed to an esp chip. The script broadcasts as the "Clod" wifi network. When a user connects, they are prompted to enter the user/pass of their home wifi network.
+* To start, you need to know what kind of esp chip you have and hard code the values into the `ESPBoardDefs.h` file within the Init_Config's `src` folder. Platformio Io needs these values within the uploader script later on in the process. To find out what you should enter in this file, go [here](http://docs.platformio.org/en/latest/platforms/espressif.html#espressif).
 
-The sketch will then get information about the esp chip, format it into an object, and send it to ` /init/control/[chipID] `
+* After verifying the values, flash the Init_Config sketch to the chip. The sketch opens an access point with the SSID "Clod." When connected, users are prompted to enter the user/pass of their home WiFi network.
 
-Initial config will produce this object and pass it to persistence, which stores it in the active_init_list
+* The sketch gets more information about the chip, formats it into an object, and sends it to ` /init/control/[chipID] `
 
-active_init_list example:
+* The persistence script grabs the object and adds it to the active_init_list.json file.
+
+active_init_list.json example:
 ```
 {
   "16019999": {
@@ -34,17 +36,20 @@ active_init_list example:
 Uploader
 ---------
 
+The uploader script receives information about the esp chip, the name of the sketch to be uploaded, and other information provided by the user. It writes a platformio.ini file within the sketch folder on the Pi, and some other definitional files, before executing a platformio command to uploade the sketch. Output from platformio is logged to a file within the sketch folder and monitored. The uploader process will repeat 3 times, or until the sketch is successfully uploaded.
+
 * Uploader.js takes the above object from initial config and builds the following JSON with provided user input.
 
-  * Note: Although this is currently done with Crouton, like everything else with Clod, it will work the same way with anything that can produce and send an object over MQTT.
+  * Note: Although this user input is currently done with Crouton, like everything else with Clod, it will work the same way with anything that can produce and send an object over MQTT.
 
-* Adds following user input: upload sketch, name, path, endpoint names and values if card_display_choice is custom.
+* Adds user input: upload_sketch, name, path, endpoint names and values if card_display_choice is custom.
 
-* If card_display_choice is "default", it will grab "default_endpoints.json" file from the sketch folder and insert it.
+* If card_display_choice is "default", it will grab the "default_endpoints.json" file from the sketch folder and insert it.
 
 * Modifies the init_device_name def file in the sketch folder so that the esp knows its name on startup.
 
 
+Example upload object sent to ` /deviceInfo/control/[name] `
 ```
 {
   "deviceInfo": {
@@ -86,7 +91,27 @@ Uploader
 }
 ```
 
-If the upload is successful, the uploader will send the above JSON to deviceInfo/confirm/[name] so that it is stored
+If the upload is successful, the script will:
+
+* send the same object back to ` /deviceInfo/confirm/[name] ` so that it is stored by the persistence script to all_devices.
+
+* send a slightly different object to ` /uploader/confirm/[name] ` that can be used by a GUI to notify the user. That object will look like this:
+
+```
+{
+	"device_name": "Floodlight Monitor",
+	"upload_sketch": "basic_esp8266",
+	"result": "success"
+}
+```
+
+If the upload is not successful, the script will:
+
+* send a retry message: ` /uploader/confirm/[name] "retry attempt # x" `
+
+... or, when x is more than 2:
+
+* send a failed message: ` /uploader/confirm/[name] "failed" ` 
 
 
 Persistence
@@ -96,7 +121,7 @@ Persistence.js keeps track of all devices and states for persistence, uploading,
 
 * adds the device name as the key for each object in the list
 
-all_devices object:
+example all_devices object:
 
 ```
 {
