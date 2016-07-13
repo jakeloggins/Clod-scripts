@@ -36,9 +36,9 @@ active_init_list.json example:
 Uploader
 ---------
 
-The uploader script receives information about the esp chip, the name of the sketch to be uploaded, and other information provided by the user. It writes a platformio.ini file within the sketch folder on the Pi, and some other definitional files, before executing a platformio command to uploade the sketch. Output from platformio is logged to a file within the sketch folder and monitored. The uploader process will repeat 3 times, or until the sketch is successfully uploaded.
+The uploader script receives information about the esp chip, the name of the sketch to be uploaded, and other information provided by the user. It writes a platformio.ini file within the sketch folder on the Pi, and some other definitional files, before executing a PlatformIO command to upload the sketch. Output from PlatformIO is logged to a file within the sketch folder and monitored. The uploader process will repeat 3 times, or until the sketch is successfully uploaded.
 
-* Uploader.js takes the above object from initial config and builds the following JSON with provided user input.
+* Uploader takes the above object from initial config and builds the following object with provided user input.
 
   * Note: Although this user input is currently done with Crouton, like everything else with Clod, it will work the same way with anything that can produce and send an object over MQTT.
 
@@ -47,6 +47,10 @@ The uploader script receives information about the esp chip, the name of the ske
 * If card_display_choice is "default", it will grab the "default_endpoints.json" file from the sketch folder and insert it.
 
 * Modifies the init_device_name def file in the sketch folder so that the esp knows its name on startup.
+
+(link to endpoints section of MQTT standard docs)
+
+(link to default_endpoints section of create your own sketch)
 
 
 Example upload object sent to ` /deviceInfo/control/[name] `
@@ -137,122 +141,6 @@ example all_devices object:
 			"path":"/house/downstairs/office/test",
 			"card_display_choice": "default",
 			"endPoints":{
-				"backDoorLock":{
-				   "function":"toggle",
-				   "card-type":"crouton-simple-toggle",
-				   "title":"Employee Door",
-				   "labels":{
-				      "false":"Unlocked",
-				      "true":"Locked"
-				   },
-				   "values":{
-				      "value":false
-				   },
-				   "icons":{
-				      "false":"lock",
-				      "true":"lock"
-				   }
-				},
-				"reset":{
-				   "card-type":"crouton-simple-button",
-				   "title":"Reset Cards",
-				   "values":{
-				      "value":true
-				   },
-				   "icons":{
-				      "icon":"cutlery"
-				   }
-				},
-				"barDoor":{
-				   "units":"people entered",
-				   "card-type":"crouton-simple-text",
-				   "values":{
-				      "value":73
-				   },
-				   "title":"Bar Main Door"
-				},
-				"temperature":{
-				   "card-type":"crouton-chart-line",
-				   "title":"Temperature (F)",
-				   "max":11,
-				   "high":73,
-				   "values":{
-				      "series":[
-				         [
-				            60
-				         ]
-				      ],
-				      "labels":[
-				         1
-				      ]
-				   },
-				   "low":58
-				},
-				"barLightLevel":{
-				   "card-type":"crouton-simple-slider",
-				   "title":"Bar Light Brightness",
-				   "max":100,
-				   "min":0,
-				   "values":{
-				      "value":30
-				   },
-				   "units":"percent"
-				},
-				"discoLights":{
-				   "max":255,
-				   "card-type":"crouton-rgb-slider",
-				   "title":"RGB Lights",
-				   "values":{
-				      "blue":0,
-				      "green":0,
-				      "red":0
-				   },
-				   "min":0
-				},
-				"customMessage":{
-				   "card-type":"crouton-simple-input",
-				   "values":{
-				      "value":"Happy Hour is NOW!"
-				   },
-				   "title":"Billboard Message"
-				},
-				"occupancy":{
-				   "card-type":"crouton-chart-donut",
-				   "title":"Occupancy",
-				   "values":{
-				      "series":[
-				         76
-				      ],
-				      "labels":[
-
-				      ]
-				   },
-				   "centerSum":true,
-				   "units":"%",
-				   "total":100
-				},
-				"drinksOrdered":{
-				   "card-type":"crouton-chart-donut",
-				   "total":100,
-				   "values":{
-				      "series":[
-				         10,
-				         20,
-				         30,
-				         10,
-				         30
-				      ],
-				      "labels":[
-				         "Scotch",
-				         "Shiner",
-				         "Rum & Coke",
-				         "Margarita",
-				         "Other"
-				      ]
-				   },
-				   "centerSum":false,
-				   "title":"Drinks Ordered"
-				},
 				"lastCall":{
 				   "card-type":"crouton-simple-button",
 				   "title":"Last Call Bell",
