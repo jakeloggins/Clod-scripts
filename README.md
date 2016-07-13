@@ -322,7 +322,7 @@ Devices should be programmed to send an LWT message to ` /[location path]/errors
 Scheduler
 ---------
 
-The scheduler sends normal MQTT commands to endpoints at specified times. It can be used through the dashboard or by sending a message to the /schedule topic. It does not interract with all_devices or the active lists.
+The scheduler sends normal MQTT commands to endpoints at specified times. It can be used through the dashboard or by sending a message to the /schedule topic. It does not interract with all_devices or the active lists. All data is stored in schedule_data.json.
 
 example schedule_data:
 
@@ -409,13 +409,5 @@ Plain language schedules are parsed using later.js. A complete guide to text par
 You can also place your own JSON schedules in the message payload. Later.js has a complete guide to forming schedule objects [here](http://bunkat.github.io/later/schedules.html).
 
 **Note**: Later.js is listed as a dependency in the bower file. You will not have to install it separately.
-
-#### Starting the Scheduler
-* Navigate to the main repo folder
-* Enter "node scheduler.js"
-* A connection message and list of active schedules will display
-
-#### Stored JSON files
-Active schedules are stored in the /public/common/schedule_data.json file to resume normally after system restart and to allow for direct editing. You can also directly edit schedule objects in this file, but must restart the scheduler for them to take effect. 
 
 The scheduler connects to the MQTT broker from the information stored in the /public/common/mqtt_broker_config.json file.
