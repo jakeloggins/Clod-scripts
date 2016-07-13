@@ -256,7 +256,7 @@ active_device_list_esp:
 
 #### Remembering States
 
-Within Clod, when a user sends a device a command, a MQTT message is sent to the ` /[path]/control/[name]/[endpoint] ` topic. All devices receive the command, do whatever they are programmed to do, and then return the message to the `/[path]/confirm/[name]/[endpoint] ` topic. Persistence listens and stores all messages that come in on the confirm topics. Persistence is always available to reply to devices requesting their last known states, whether during the startup process or for any other reason. Persistence will reply by sending a message to every endpoint's control topic. 
+Within Clod, when a user sends a device a command, a MQTT message is sent to the ` /[path]/control/[name]/[endpoint] ` topic. All devices receive the command, do whatever they are programmed to do, and then return the message to the `/[path]/confirm/[name]/[endpoint] ` topic. Persistence listens and stores all messages that come in on the confirm topics. Persistence is always available to reply to devices requesting their last known states, whether during the startup process or any other reason. It will reply by sending a message to every endpoint's control topic. 
 
 * As an example, imagine a device programmed with a single endpoint that toggled a switch. By default, the switch is `off`. The user toggles the switch `on`, causing a message to be sent: ` /[path]/control/[name]/[endpoint] "on" `
 
@@ -307,7 +307,7 @@ The uploader script needs to know the device's IP address to function properly. 
 
 * Device sends persistence its IP: ` /persistence/control/[name]/ip "192.168.1.99" `
 
-* Persistence checks to see if it matches.
+* Persistence checks to see if it matches and updates all_devices if necessary.
 
   * Return ` /persistence/confirm/[name]/ip "no change" ` if IP matched.
 
@@ -316,15 +316,15 @@ The uploader script needs to know the device's IP address to function properly. 
 
 #### LWT messages
 
-Devices should be programmed to send an LWT message to ` /[location path]/errors/[name] `. Persistence will mark the device as disconnected within all_devices and remove it from the active lists. Depending on the circumstances, persistence may also remove the device entirely from all_devices.
+Devices should be programmed to send an LWT message to ` /[location path]/errors/[name] `. Persistence will mark the device as disconnected within all_devices and remove it from the active lists. Depending on the circumstances, persistence may also delete the device from all_devices.
 
 
 Scheduler
 ---------
 
-Scheduler.js takes device names and endpoints and adds schedule specific information. It does not interract with all_devices or the active lists.
+The scheduler sends normal MQTT commands to endpoints at specified times. It can be used through the dashboard or by sending a message to the /schedule topic. It does not interract with all_devices or the active lists.
 
-schedule_data:
+example schedule_data:
 
 ```
 {
@@ -357,3 +357,65 @@ schedule_data:
 	}
 }
 ```
+
+
+#### Command Syntax
+On recepit of a message to /schedule/#, the scheduler gets information about the endpoint from the rest of the message topic, and parses the message payload to create the schedule. The example message will ask the scheduler to lock the "backDoorLock" endpoint every night at 6pm. To change it to every night at 7pm, simply send another message to the same topic with a payload of "every night at 7pm."
+```
+/schedule/[path]/[action type]/[device name]/[endPoint name]/[value]
+```
+```
+example schedule message:
+topic: /schedule/house/downstairs/office/toggle/crouton-demo/backDoorLock/off 
+payload: "every night at 6pm"
+```
+
+#### Action Types and Values
+* *toggle*: Toggles a Simple Toggle card. Accepts true/false or on/off as values.
+* *button*: Presses a Simple Button card. Does not require a value.
+* *slide_to*: Moves a Simple Slider card to the value.
+* *slide_above*: Moves a Simple Slider card to the value, unless the current value is higher.
+* *slide_below*: Moves a Simple Slider card to the value, unless the current value is lower.
+
+**Note**: slide_above and slide_below are not yet supported.
+
+#### Removing Schedules
+* *clear*: deletes a previously created schedule.
+* *clearall*: deletes all active schedules. Should be sent to /schedule/clearall/ topic.
+
+To delete a schedule, send a message to:
+```
+/schedule/[path]/ clear /[device name]/[endPoint name]/[value]
+```
+To delete all active schedules send a message to:
+```
+/schedule/clearall
+```
+
+**Note**: If you use the scheduler, you cannot use any of the action type keywords in a path, device_name, or endpoints.
+
+#### Dashboard Interface
+The schedule page is a more visual way to add, edit, or delete schedules. Currently active schedules will always be displayed above the form. You can only set one schedule per endpoint, to edit/overwrite an existing schedule, re-enter it by using the form.
+
+If an endpoint was added earlier from the dashboard on the connections page, it's name is the card title converted to camelCase. It's good practice to name all of your endpoints in camelCase.
+
+**Note**: The dashboard interface doesn't do anything more than format and send a message to the scheduler. 
+
+#### Plain Language Parsing
+
+Plain language schedules are parsed using later.js. A complete guide to text parsing can be found [here](http://bunkat.github.io/later/parsers.html#text).
+
+#### Schedule Objects
+You can also place your own JSON schedules in the message payload. Later.js has a complete guide to forming schedule objects [here](http://bunkat.github.io/later/schedules.html).
+
+**Note**: Later.js is listed as a dependency in the bower file. You will not have to install it separately.
+
+#### Starting the Scheduler
+* Navigate to the main repo folder
+* Enter "node scheduler.js"
+* A connection message and list of active schedules will display
+
+#### Stored JSON files
+Active schedules are stored in the /public/common/schedule_data.json file to resume normally after system restart and to allow for direct editing. You can also directly edit schedule objects in this file, but must restart the scheduler for them to take effect. 
+
+The scheduler connects to the MQTT broker from the information stored in the /public/common/mqtt_broker_config.json file.
