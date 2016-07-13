@@ -136,7 +136,7 @@ The persistence script is the workhorse of the Clod system. It listens to MQTT t
 * Maintain all_devices.json, active_device_list.json, active_init_list.json, and active_device_list_esp.json
 
 
-### ESP chip after upload
+#### ESP chip after upload
 
 1. Persistence adds a newly uploaded device to all_devices as seen in the `esp-uploaded-example` device object below and to the active device lists. 
 
@@ -241,7 +241,7 @@ Here's what all_devices.json looks like with two device objects:
 ```
 
 
-### List of Currently Connected Devices
+#### List of Currently Connected Devices
 
 Persistence keeps a running list of all_devices who have a device_status of "connected" ...
 
@@ -251,13 +251,17 @@ active_device_list:
 
 ... and a list of devices that are "connected" and have "type:esp" (this is only for use by the uploader).
 
+active_device_list_esp:
+
 ``` ["esp-uploaded-example"] ```
 
-### ESP Startup Process
+#### ESP Startup Process
 
-1. On startup, esp devices ask persistence for its states by publishing to ``` /deviceInfo/control/[name] "get states" ```. 
+1. On startup, esp devices ask persistence for its states by publishing to ``` /persistence/control/[name] "request states" ```. 
 
 2. Persistence checks active_devices for the name key, and if found, returns the stored object to the device.
+  
+  * If found, it returs
 
 3. Esp verifies that its current IP address is consistent with the one in the object it just recieved.
 
@@ -266,6 +270,13 @@ active_device_list:
 5. If the esp disconnects from the MQTT broker or loses power, this process will repeat.
 
 
+#### IP Verification
+
+
+
+#### LWT messages
+
+Devices should be programmed to send an LWT message to ` /[location path]/errors/[name] `. Persistence will mark it as disconnected and, should
 
 
 Scheduler
