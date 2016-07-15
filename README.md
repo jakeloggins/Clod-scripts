@@ -16,7 +16,7 @@ Init_Config
 * The persistence script grabs the object and adds it to the active_init_list.json file.
 
 active_init_list.json example:
-```
+```json
 {
   "16019999": {
 	"current_ip": "192.168.1.141",
@@ -54,7 +54,7 @@ The uploader script receives information about the esp chip, the name of the ske
 
 
 Example upload object sent to ` /deviceInfo/control/[name] `
-```
+```json
 {
   "deviceInfo": {
 	"current_ip": "192.168.1.141",
@@ -150,7 +150,7 @@ The persistence script is the workhorse of the Clod system. It listens to MQTT t
 
 Here's what all_devices.json looks like with two device objects:
 
-```
+```json
 {
 	"esp-uploaded-example": {
 		"deviceInfo":{
@@ -326,7 +326,7 @@ The scheduler sends normal MQTT commands to endpoints at specified times. It can
 
 example schedule_data:
 
-```
+```json
 {
 	"esp-bedside-lamp":{
 		"alarmLight":{
