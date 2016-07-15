@@ -1,4 +1,4 @@
-Clod Walkthrough
+Clod Scripts Walkthrough
 ==============
 
 This section explains the behavior of the Clod scripts as an esp chip is added to the system and a user performs typical interactions with it. **If you just want to use Clod, you don't need to read this section.** This is intended for developers who want to improve the codebase, contribute to the sketch library, create their own GUI, or integrate Clod with 3rd party services.
