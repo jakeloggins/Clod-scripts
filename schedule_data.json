@@ -1,0 +1,1 @@
+{"esp":{"alarm":{"interval":{},"schedule":{"schedules":[{"d":[2,3,4,5,6],"t":[61200]}],"exceptions":[],"error":-1},"plain_language":"every weekday at 5:00pm","action":"toggle","path":"/esp/","value":"off"}}}

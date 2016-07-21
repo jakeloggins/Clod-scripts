@@ -1,0 +1,31 @@
+{
+  "name": "clod-scripts",
+  "version": "0.0.1",
+  "description": "Clod IoT Scripts",
+  "main": "persistence.js",
+  "dependencies": {
+    "jsonfile": "^2.3.1",
+    "later": "^1.2.0",
+    "mkdirp": "^0.5.1",
+    "mqtt": "^1.7.3",
+    "readdirp": "^2.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jakeloggins/Clod-scripts.git"
+  },
+  "keywords": [
+    "Clod",
+    "Scripts"
+  ],
+  "author": "Jake Loggins",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jakeloggins/Clod-scripts/issues"
+  },
+  "homepage": "https://github.com/jakeloggins/Clod-scripts#readme"
+}
