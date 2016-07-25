@@ -1,3 +1,5 @@
+#!/usr/bin/node
+
 var jsonfile = require('jsonfile'),
 	fs = require('fs'),
 	mqtt = require('mqtt');

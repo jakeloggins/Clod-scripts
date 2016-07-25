@@ -1,3 +1,5 @@
+#!/usr/bin/node
+
 var jsonfile = require('jsonfile'),
 	later = require('later'),
 	util = require('util'), // not sure if I need this
