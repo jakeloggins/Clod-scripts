@@ -1,5 +1,3 @@
-#!/usr/bin/node
-
 var mqtt = require('mqtt'),
 	fs = require('fs');
 
