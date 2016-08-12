@@ -58,9 +58,6 @@ function startup() {
 		fs.accessSync(user_wifi_login, fs.R_OK | fs.W_OK);
 		user_wifi_obj = require(user_wifi_login);
 		console.log("user wifi login stored from boot");
-		console.log(user_wifi_obj);
-		console.log(user_wifi_obj.ssid);
-		console.log(user_wifi_obj.password);
 
 		// write to wifilogin.h
 		wifilogin_loc = platformio_loc;
@@ -68,11 +65,11 @@ function startup() {
 
 		wifilogin_h_string = "const char* ssid = \"";
 		wifilogin_h_string += user_wifi_obj.ssid;
-		wifilogin_h_sting += "\";\n";
+		wifilogin_h_string += "\";\n";
 
 		wifilogin_h_string += "const char* password = \"";
 		wifilogin_h_string += user_wifi_obj.password;
-		wifilogin_h_sting += "\";\n";
+		wifilogin_h_string += "\";\n";
 
 	}
 	catch(err_get_wifi) {
