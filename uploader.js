@@ -56,7 +56,7 @@ function startup() {
 	try {
 		// does file exist
 		fs.accessSync(user_wifi_login, fs.R_OK | fs.W_OK);
-		user_wifi_obj = require(override_platformio_loc);
+		user_wifi_obj = require(user_wifi_login);
 		console.log("user wifi login stored from boot");
 
 		// write to wifilogin.h
