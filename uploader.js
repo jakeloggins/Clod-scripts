@@ -23,10 +23,12 @@ var default_dir;
 var global_topic;
 var global_payload = {};
 
-var default_platformio_loc = 'home/clod/.platformio/';
-var override_platformio_loc = 'boot/platformio.json'; // future feature - allow the user to specify where platformio was installed
+// script is located in /home/clod/Clod-scripts
 
-var user_wifi_login = 'boot/wifilogin.json';
+var default_platformio_loc = '../.platformio/';
+var override_platformio_loc = '../../../boot/platformio.json'; // future feature - allow the user to specify where platformio was installed
+
+var user_wifi_login = '../../../boot/wifilogin.json';
 
 function startup() {
 	
