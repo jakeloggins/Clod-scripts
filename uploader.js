@@ -58,6 +58,7 @@ function startup() {
 		fs.accessSync(user_wifi_login, fs.R_OK | fs.W_OK);
 		user_wifi_obj = require(user_wifi_login);
 		console.log("user wifi login stored from boot");
+		console.log(user_wifi_obj);
 
 		// write to wifilogin.h
 		wifilogin_loc = platformio_loc;
