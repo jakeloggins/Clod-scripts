@@ -82,8 +82,9 @@ function startup() {
 
 
 	}
-	catch(error) {
+	catch(err) {
 		// file does not exist so just use default
+		console.log(err);
 		console.log("WARNING: no boot/wifilogin,json file found, uploaded sketches may not connect to wifi");
 	}
 
