@@ -29,6 +29,7 @@ var default_platformio_loc = '../.platformio/';
 var override_platformio_loc = '../../../boot/platformio.json'; // future feature - allow the user to specify where platformio was installed
 
 var user_wifi_login = '../../../boot/wifilogin.json';
+var wifilogin_h_string = "";
 
 function startup() {
 	
