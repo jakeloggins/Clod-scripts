@@ -61,7 +61,7 @@ function startup() {
 
 		// write to wifilogin.h
 		wifilogin_loc = platformio_loc;
-		wifilogin_loc += "/lib/wifilogin/wifilogin.h";
+		wifilogin_loc += "lib/wifilogin/wifilogin.h";
 
 		wifilogin_h_string += "const char* ssid = \"";
 		wifilogin_h_string += user_wifi_obj.ssid;
@@ -71,17 +71,6 @@ function startup() {
 		wifilogin_h_string += user_wifi_obj.password;
 		wifilogin_h_sting += "\";\n";
 
-
-		try { 
-			fs.writeFileSync(wifilogin_loc, wifilogin_h_string);
-			console.log("The platformio wifilogin library file was saved!");
-		}
-		catch(err_write) {
-			console.log(err_write);
-		}
-
-
-
 	}
 	catch(err_get_wifi) {
 		// file does not exist so just use default
@@ -90,6 +79,16 @@ function startup() {
 	}
 
 
+	// write file
+
+	try { 
+		fs.writeFileSync(wifilogin_loc, wifilogin_h_string);
+		console.log("The platformio wifilogin library file was saved!");
+	}
+	catch(err_write) {
+		console.log("write failed");
+		console.log(err_write);
+	}
 
 
 
