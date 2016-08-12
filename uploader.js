@@ -59,6 +59,8 @@ function startup() {
 		user_wifi_obj = require(user_wifi_login);
 		console.log("user wifi login stored from boot");
 		console.log(user_wifi_obj);
+		console.log(user_wifi_obj.ssid);
+		console.log(user_wifi_obj.password);
 
 		// write to wifilogin.h
 		wifilogin_loc = platformio_loc;
