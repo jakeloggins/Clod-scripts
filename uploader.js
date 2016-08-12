@@ -43,9 +43,10 @@ function startup() {
 		console.log("override file found, path to platformio stored");
 
 	}
-	catch(error) {
+	catch(error_override) {
 		// file does not exist so just use default
 		platformio_loc = default_platformio_loc;
+		console.log(error_override)
 		console.log("no override, using default path to platformio");
 	}
 
@@ -75,16 +76,16 @@ function startup() {
 			fs.writeFileSync(wifilogin_loc, wifilogin_h_string);
 			console.log("The platformio wifilogin library file was saved!");
 		}
-		catch(err) {
-			console.log(err);
+		catch(err_write) {
+			console.log(err_write);
 		}
 
 
 
 	}
-	catch(err) {
+	catch(err_get_wifi) {
 		// file does not exist so just use default
-		console.log(err);
+		console.log(err_get_wifi);
 		console.log("WARNING: no boot/wifilogin,json file found, uploaded sketches may not connect to wifi");
 	}
 
