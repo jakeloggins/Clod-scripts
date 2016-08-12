@@ -29,7 +29,6 @@ var default_platformio_loc = '../.platformio/';
 var override_platformio_loc = '../../../boot/platformio.json'; // future feature - allow the user to specify where platformio was installed
 
 var user_wifi_login = '../../../boot/wifilogin.json';
-var wifilogin_h_string = "";
 
 function startup() {
 	
@@ -64,7 +63,7 @@ function startup() {
 		wifilogin_loc = platformio_loc;
 		wifilogin_loc += "lib/wifilogin/wifilogin.h";
 
-		wifilogin_h_string += "const char* ssid = \"";
+		wifilogin_h_string = "const char* ssid = \"";
 		wifilogin_h_string += user_wifi_obj.ssid;
 		wifilogin_h_sting += "\";\n";
 
