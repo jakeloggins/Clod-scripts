@@ -1,4 +1,7 @@
-var mqtt = require('mqtt'),
+#!/usr/bin/node
+
+var jsonfile = require('jsonfile'),
+	mqtt = require('mqtt'),
 	fs = require('fs');
 
 var mqtt_config = require('./mqtt_broker_config.json');
@@ -19,6 +22,76 @@ var default_dir;
 
 var global_topic;
 var global_payload = {};
+
+var default_platformio_loc = 'home/clod/.platformio/';
+var override_platformio_loc = 'boot/platformio.json'; // future feature - allow the user to specify where platformio was installed
+
+var user_wifi_login = 'boot/wifilogin.json';
+
+function startup() {
+	
+	// find out where platformio is installed - reserved for future advanced user settings
+
+	try {
+		// does file exist
+		fs.accessSync(override_platformio_loc, fs.R_OK | fs.W_OK);
+		platformio_loc_obj = require(override_platformio_loc);
+		platformio_loc = platformio_loc_obj.loc;
+
+		console.log("override file found, path to platformio stored");
+
+	}
+	catch(error) {
+		// file does not exist so just use default
+		platformio_loc = default_platformio_loc;
+		console.log("no override, using default path to platformio");
+	}
+
+
+	// get wifi login information from boot
+
+	try {
+		// does file exist
+		fs.accessSync(user_wifi_login, fs.R_OK | fs.W_OK);
+		user_wifi_obj = require(override_platformio_loc);
+		console.log("user wifi login stored from boot");
+
+		// write to wifilogin.h
+		wifilogin_loc = platformio_loc;
+		wifilogin_loc += "/lib/wifilogin/wifilogin.h";
+
+		wifilogin_h_string += "const char* ssid = \"";
+		wifilogin_h_string += user_wifi_obj.ssid;
+		wifilogin_h_sting += "\";\n";
+
+		wifilogin_h_string += "const char* password = \"";
+		wifilogin_h_string += user_wifi_obj.password;
+		wifilogin_h_sting += "\";\n";
+
+
+		try { 
+			fs.writeFileSync(wifilogin_loc, wifilogin_h_string);
+			console.log("The platformio wifilogin library file was saved!");
+		}
+		catch(err) {
+			console.log(err);
+		}
+
+
+
+	}
+	catch(error) {
+		// file does not exist so just use default
+		console.log("WARNING: no boot/wifilogin,json file found, uploaded sketches may not connect to wifi");
+	}
+
+
+
+
+
+	
+};
+
 
 function compile() {
 	child = exec('platformio run --target upload');
@@ -413,6 +486,9 @@ function onMSG(topic, payload) {
 		retry();
 	}
 }
+
+// start program
+startup();
 
 default_dir = process.cwd();
 
