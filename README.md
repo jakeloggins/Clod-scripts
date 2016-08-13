@@ -11,6 +11,8 @@ Init_Config
 
 * After verifying the values, flash the Init_Config sketch to the chip. The sketch opens an access point with the SSID "Clod." When connected, users are prompted to enter the user/pass of their home WiFi network.
 
+* Clod scripts requires an MQTT broker to be running at the location specified in `mqtt_broker_config.json`. [Here's](https://github.com/jakeloggins/Clod/blob/master/pi-install.md#mosquitto-mqtt-broker) a quick guide to setting up a mosquitto MQTT broker.
+
 * The sketch gets more information about the chip, formats it into an object, and sends it to ` /init/control/[chipID] `
 
 * The persistence script grabs the object and adds it to the active_init_list.json file.
