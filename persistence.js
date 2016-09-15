@@ -390,7 +390,7 @@ function onMSG(topic, payload) {
         		payload_obj = JSON.parse(payload);
 
         		//  if it has a chipID, loop through all_devices and delete any other device with a match
-        		if (payload_obj.deviceInfo.espInfo.chipID) {
+        		if (payload_obj.deviceInfo.espInfo.chipID != null) {
         			for (key in all_devices) {
         				if (all_devices[key]["deviceInfo"]["espInfo"]["chipID"] == payload_obj.deviceInfo.espInfo.chipID) {
         					if (key != device_name) {
@@ -403,7 +403,7 @@ function onMSG(topic, payload) {
         		}
 
         		// if it has an IP, loop through all_devices and delete any other device with a match
-        		if (payload_obj.deviceInfo.current_ip) {
+        		if (payload_obj.deviceInfo.current_ip != null) {
         			for (key in all_devices) {
         				if (all_devices[key]["deviceInfo"]["current_ip"] == payload_obj.deviceInfo.current_ip) {
         					if (key != device_name) {
