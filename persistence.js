@@ -390,17 +390,19 @@ function onMSG(topic, payload) {
         		payload_obj = JSON.parse(payload);
 
         		//  if it has a chipID, loop through all_devices and delete any other device with a match
-        		if (payload_obj.deviceInfo.espInfo.chipID != null) {
-        			for (key in all_devices) {
-        				if (all_devices[key]["deviceInfo"]["espInfo"]["chipID"] == payload_obj.deviceInfo.espInfo.chipID) {
-        					if (key != device_name) {
-	        					delete all_devices[key];
-	        					listremove(key, "esp"); // stipulating that it's esp b/c otherwise would not be in this loop
-	        					console.log("removed ", key, " had same chipID");
-        					}
-        				}
-        			}
-        		}
+        		if (payload_obj.deviceInfo.espInfo != null) {
+	        		if (payload_obj.deviceInfo.espInfo.chipID != null) {
+	        			for (key in all_devices) {
+	        				if (all_devices[key]["deviceInfo"]["espInfo"]["chipID"] == payload_obj.deviceInfo.espInfo.chipID) {
+	        					if (key != device_name) {
+		        					delete all_devices[key];
+		        					listremove(key, "esp"); // stipulating that it's esp b/c otherwise would not be in this loop
+		        					console.log("removed ", key, " had same chipID");
+	        					}
+	        				}
+	        			}
+	        		}
+	        	}
 
         		// if it has an IP, loop through all_devices and delete any other device with a match
         		if (payload_obj.deviceInfo.current_ip != null) {
