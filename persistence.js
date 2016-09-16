@@ -252,7 +252,9 @@ function onMSG(topic, payload) {
         // /persistence/[command]/[name]/ip - "[ip address string]"
         else if (before_command[0] == "persistence") {
         	device_name = after_command[0].toString();
-        	second_identifier = after_command[1].toString();
+        	if (after_command[1] != null) {
+        		second_identifier = after_command[1].toString();
+        	}
         	if (command == "control") {
         		// RESPOND TO DEVICE START UP
         		if (payload == "request states") {
