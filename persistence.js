@@ -275,7 +275,9 @@ function onMSG(topic, payload) {
 							listadd(device_name, device_type);
 
 							// send series of control messages to arduino, for every active endpoint, with 300ms delay
-							if (device_type == "esp") {
+
+							// add arduino type to this, so types are: esp, arduino, other (including python)
+							if (device_type == "esp" || device_type == "arduino") {
 								for (endpoint in all_devices[key]["deviceInfo"]["endPoints"]) {
 									// send a control message with the payload and wait 300ms so arduino has time to process
 									send_path = device_path.toString().concat("/control/").concat(key).concat("/").concat(endpoint);
