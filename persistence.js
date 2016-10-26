@@ -327,14 +327,25 @@ function onMSG(topic, payload) {
         			send_path += device_name;
         			send_path += "/ip";
         			// when a device announces a different IP on connect, update it on all_devices
-        			if (all_devices[device_name]["deviceInfo"]["current_ip"] != ip_addr_str) {
-	        			all_devices[device_name]["deviceInfo"]["current_ip"] = ip_addr_str;
-	        			jsonfile.writeFile(all_devices_file, all_devices);
-	        			client.publish(send_path, ip_addr_str);
-        			}
-        			else {
-        				client.publish(send_path, "no change");
-        			}
+
+        			// unless there is no current entry
+					for (key in all_devices) {
+						if (key == device_name) {
+							if (all_devices[device_name]["deviceInfo"] != null && all_devices[device_name]["deviceInfo"]["current_ip"] != null) {
+								//console.log(all_devices[device_name]["deviceInfo"]["current_ip"]);
+								console.log("match");
+			        			if (all_devices[device_name]["deviceInfo"]["current_ip"] != ip_addr_str) {
+				        			all_devices[device_name]["deviceInfo"]["current_ip"] = ip_addr_str;
+				        			jsonfile.writeFile(all_devices_file, all_devices);
+				        			client.publish(send_path, ip_addr_str);
+			        			}
+			        			else {
+			        				client.publish(send_path, "no change");
+			        			}								
+							}
+						}
+					}
+
         		}
 
 
