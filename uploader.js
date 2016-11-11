@@ -369,7 +369,8 @@ function onMSG(topic, payload) {
 					'platform = espressif\n' +
 					'framework = arduino\n' +
 					'board = ' + payload_obj.deviceInfo.espInfo.board_type + '\n' +
-					'upload_port = ' + payload_obj.deviceInfo.current_ip + '\n';
+					'upload_port = ' + payload_obj.deviceInfo.current_ip + '\n' +
+					'lib_extra_dirs = ../../custom_lib\n';
 
 
 				try {
