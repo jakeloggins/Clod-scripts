@@ -61,7 +61,7 @@ function startup() {
 
 		// write to wifilogin.h
 		wifilogin_loc = platformio_loc;
-		wifilogin_loc += "lib/wifilogin/wifilogin.h";
+		wifilogin_loc += "wifilogin/wifilogin.h";
 
 		wifilogin_h_string = "const char* ssid = \"";
 		wifilogin_h_string += user_wifi_obj.ssid;
