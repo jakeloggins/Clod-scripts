@@ -216,7 +216,7 @@ function onMSG(topic, payload) {
 							try {
 								// does file exist
 								//default_endpoints_file = './sketches/' + payload_obj.deviceInfo.espInfo.upload_sketch + '/default_endpoints.json';
-								default_endpoints_file = process.cwd() + './default_endpoints.json';
+								default_endpoints_file = process.cwd() + '/default_endpoints.json';
 								//default_endpoints_file = './default_endpoints.json';
 								console.log("attempting...", default_endpoints_file);
 								fs.accessSync(default_endpoints_file, fs.R_OK | fs.W_OK);
