@@ -25,8 +25,8 @@ var global_payload = {};
 
 // script is located in /home/clod/Clod-scripts
 
-var default_platformio_loc = '../.platformio/';
-var override_platformio_loc = '../../../boot/platformio.json'; // future feature - allow the user to specify where platformio was installed
+var default_platformio_loc = '../Clod-sketch-library/custom_libs/'; // location of custom dependency libraries for use by sketches
+var override_platformio_loc = '../../../boot/platformio.json'; // future feature - allow the user to specify where platformio dependency library was installed
 
 var user_wifi_login = '../../../boot/wifilogin.json';
 
@@ -370,7 +370,7 @@ function onMSG(topic, payload) {
 					'framework = arduino\n' +
 					'board = ' + payload_obj.deviceInfo.espInfo.board_type + '\n' +
 					'upload_port = ' + payload_obj.deviceInfo.current_ip + '\n' +
-					'lib_extra_dirs = ../../custom_lib\n';
+					'lib_extra_dirs = ../../custom_libs\n';
 
 
 				try {
