@@ -285,7 +285,7 @@ function onMSG(topic, payload) {
 									payload_obj = all_devices[key]["deviceInfo"]["endPoints"][endpoint]["values"];
 									payload_obj_str = JSON.stringify(payload_obj);
 
-									setTimeout(slowfeed, 300, send_path, payload_obj_str);
+									setTimeout(slowfeed, 500, send_path, payload_obj_str);
 								};
 								match_flag = true;
 								break;
