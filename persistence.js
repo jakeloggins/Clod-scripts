@@ -565,10 +565,9 @@ function onMSG(topic, payload) {
 				   if (payload_obj.hasOwnProperty(key)) {
 				   	// line chart card sends values wrapped in update object, check for it and strip it out
 				   	if (key == "update") {
-				   		for (k in payload_obj["update"]) {
-				   			all_devices[device_name]["deviceInfo"]["endPoints"][endpoint]["values"][key] = payload_obj[k];
-				   			//console.log("update..", payload_obj["update"][k]);
-				   		};
+				   		all_devices[device_name]["deviceInfo"]["endPoints"][endpoint]["values"][key] = payload_obj[key];
+				   		//console.log("update..", payload_obj["update"][k]);
+				   		
 				   	} else {
 						all_devices[device_name]["deviceInfo"]["endPoints"][endpoint]["values"][key] = payload_obj[key];
 						//console.log(payload_obj[key]);
