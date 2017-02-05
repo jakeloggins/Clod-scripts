@@ -563,10 +563,34 @@ function onMSG(topic, payload) {
 				payload_obj = JSON.parse(payload);
 				for (key in payload_obj) {
 				   if (payload_obj.hasOwnProperty(key)) {
-				   	// line chart card sends values wrapped in update object, check for it and strip it out
-				   	if (key == "update") {
-				   		all_devices[device_name]["deviceInfo"]["endPoints"][endpoint]["values"][key] = payload_obj[key];
-				   		//console.log("update..", payload_obj["update"][k]);
+				   		if (key == "update") {
+
+					   		// add the update to the update object
+	              			all_devices[device_name]["deviceInfo"]["endPoints"][endpoint]["values"][key] = payload_obj[key];
+
+
+              
+							// insert and store labels update in the main values object
+							if (all_devices[device_name]["deviceInfo"]["endPoints"][endpoint]["values"]["labels"].length >= all_devices[device_name]["deviceInfo"]["endPoints"][endpoint]["max"]) {
+								// but first remove oldest entry if max attribute has been exceeded
+								all_devices[device_name]["deviceInfo"]["endPoints"][endpoint]["values"]["labels"].splice(0, 1);
+							}
+							// now add to end
+							all_devices[device_name]["deviceInfo"]["endPoints"][endpoint]["values"]["labels"].push(payload_obj[key]["labels"][0]);
+							//console.log(all_devices[device_name]["deviceInfo"]["endPoints"][endpoint]["values"]["labels"]);
+
+
+
+							// insert and store series update in the main values object
+							if (all_devices[device_name]["deviceInfo"]["endPoints"][endpoint]["values"]["series"][0].length >= all_devices[device_name]["deviceInfo"]["endPoints"][endpoint]["max"]) {
+								// but first remove oldest entry if max attribute has been exceeded
+								all_devices[device_name]["deviceInfo"]["endPoints"][endpoint]["values"]["series"][0].splice(0, 1);
+							}
+							// now add to end       
+							all_devices[device_name]["deviceInfo"]["endPoints"][endpoint]["values"]["series"][0].push(payload_obj[key]["series"][0][0]);
+							//console.log(all_devices[device_name]["deviceInfo"]["endPoints"][endpoint]["values"]["series"]);
+
+
 				   		
 				   	} else {
 						all_devices[device_name]["deviceInfo"]["endPoints"][endpoint]["values"][key] = payload_obj[key];
